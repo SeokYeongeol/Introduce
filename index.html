@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduce_Myself</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Jua&display=swap');
+
+        * {
+            font-family: 'Jua', sans-serif;
+        }
+
+        .main {
+            background-image: url("https://img.pikbest.com/origin/10/09/68/36ApIkbEsTeDi.jpg!w700wp");
+            background-position: center;
+            background-size: cover;
+            background-blend-mode: screen;
+            height: 500px;
+            position: relative;
+        }
+
+        .main::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(transparent, deepSkyBlue);
+        }
+
+        .floating-card {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300px;
+            height: auto;
+            transform: translate(-50%, -40%);
+            z-index: 10;
+            padding: 20px;
+            text-align: center;
+            margin-top: 450px;
+
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+
+            opacity: 0;
+            transition: opcity 0.5s, transform 0.5s;
+        }
+
+        .floating-card.visible {
+            opacity: 1;
+            transform: translate(-50%, -50%)
+        }
+
+        .floating-card h2 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .floating-card p {
+            font-size: 16px;
+        }
+
+        #title {
+            color: white;
+
+            margin: 0px auto 0px auto;
+            justify-content: center;
+            text-align: center;
+        }
+
+        #font-update {
+            font-size: 20px;
+        }
+
+        #velog {
+            margin-left: 10px;
+        }
+
+        #github {
+            margin-left: 20px;
+        }
+
+        #guestbook {
+            margin-left: 20px;
+        }
+
+        #navbar {
+            background-color: #0d557d;
+        }
+
+        a {
+            color: white;
+        }
+
+        .nav-link {
+            color: white;
+        }
+
+        body {
+            max-height: auto;
+            background: linear-gradient(deepSkyBlue, white 100%);
+            margin: 0;
+        }
+
+        .snow {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 3px 3px white;
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            // 눈 내리는 애니메이션 추가
+            for (let i = 0; i < 100; i++) {
+                const snow = document.createElement("div");
+                snow.className = "snow";
+                snow.style.opacity = Math.random();
+
+                const startX = Math.random() * 90;
+                const endX = startX + (Math.random() * 20 - 10);
+                const scale = Math.max(Math.random(), 0.5);
+
+                const keyframe = [
+                    { transform: `translate(${startX}vw, 0) scale(${scale})` },
+                    { transform: `translate(${endX}vw, 500px) scale(${scale})` },
+                ];
+                const option = {
+                    duration: 15000,
+                    easing: "linear",
+                    iterations: Infinity,
+                    delay: -Math.random() * 20 * 1000,
+                };
+                snow.animate(keyframe, option);
+
+                document.body.appendChild(snow);
+            }
+
+            // 검색창에 입력하면 구글 검색 이벤트
+            $('#searchButton').click(function () {
+                searchGoogle();
+            });
+
+            $('#searchInput').keydown(function(event) {
+                if(event.key === 'Enter') {
+                    event.preventDefault();
+                    searchGoogle();
+                }
+            });
+
+            // 검색 함수
+            function searchGoogle() {
+                let searchUrl = $('#searchInput').val();
+                if (searchUrl) {
+                    const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(searchUrl)}`;
+                    window.location.href = googleSearchUrl;
+                } 
+                else alert('검색어를 입력해주세요!');
+            }
+        });
+
+        // 자기소개 카드 애니메이션 + 뷰포트 내 카드 감지 이벤트 추가
+        document.addEventListener("DOMContentLoaded", () => {
+            const sections = document.querySelectorAll('.floating-card');
+
+            const observer = new IntersectionObserver(
+                (entries) => {
+                    entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        } else {
+                            entry.target.classList.remove('visible');
+                        }
+                    });
+                },
+                { threshold: 0.6 } // 섹션의 60%가 뷰포트에 들어오면 감지
+            );
+
+            sections.forEach((section) => observer.observe(section));
+
+            window.addEventListener("beforeunload", () => {
+                sections.forEach((section) => observer.unobserve(section));
+            });
+        });
+
+        
+    </script>
+</head>
+
+<body>
+    <!--Header Navbar-->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="navbar">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Introduce</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0" id="font-update">
+                    <li class="nav-item" id="velog">
+                        <a class="nav-link" aria-current="page" href="https://velog.io/@cheoni5417/posts">Velog</a>
+                    </li>
+                    <li class="nav-item" id="github">
+                        <a class="nav-link" href="https://github.com/SeokYeongeol">Github</a>
+                    </li>
+                    <li class="nav-item" id="guestbook">
+                        <a class="nav-link" href="https://seokyeongeol.github.io/guestbook/">방명록</a>
+                    </li>
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" id="searchInput" type="search" placeholder="Search" aria-label="Search">
+                    <button type="button" class="btn btn-outline-light" id="searchButton">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+
+    <!--JumboTron-->
+    <div class="main">
+        <div class="p-5 mb-4 bg-body-tertiary rounded-3">
+            <div class="container-fluid py-5">
+                <h1 id="title" class="display-5 fw-bold">석연걸의 자기소개입니다!</h1>
+            </div>
+        </div>
+    </div>
+
+    <!--Introduce Card-->
+    <div class="floating-card" style="width: 18rem;">
+        <img src="https://github.com/SeokYeongeol/introduce/blob/main/Selfie.jpg?raw=true"
+            class="card-img-top" alt="...">
+        <div class="card-body">
+            <h5 class="card-title">석연걸</h5>
+            <hr>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item">나이 : 25</li>
+            <li class="list-group-item">거주지 : 강원도 홍천</li>
+            <li class="list-group-item">캠프 기간 잘 부탁드립니다!!</li>
+        </ul>
+    </div>
+</body>
+
+</html>
